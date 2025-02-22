@@ -1,0 +1,19 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.root {
+    -fx-font-size: 14px;
+   /*  -fx-font-family: sans-serif; */
+    -fx-background-color: #71D4E9;
+}
+
+#headerlabel{
+    -fx-font-size: 24px;
+    -fx-font-family: Corbel;
+    -fx-text-alignment: CENTER;
+    -fx-text-fill: #000000;	
+}
+
+Label {
+    -fx-font-size: 14px;
+    -fx-font-family: Courier;
+    -fx-text-alignment: CENTER;		
+}
