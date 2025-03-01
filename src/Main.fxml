@@ -5,35 +5,42 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="635.0" stylesheets="@application/application.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<VBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="971.0" prefWidth="1309.0" stylesheets="@application/application.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
-      <ImageView id="UsImageView" fx:id="usImageView" fitHeight="326.0" fitWidth="311.0" layoutX="7.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@WestUS-flat-google.jpg" />
-         </image>
-      </ImageView>
-      <ImageView id="EusImageView" fx:id="eusImageView" fitHeight="309.0" fitWidth="311.0" layoutX="318.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@euskadiOverlap3.png" />
-         </image>
-      </ImageView>
-      <ComboBox fx:id="sirNameCombo" layoutX="311.0" layoutY="394.0" onAction="#sirNameSelected" prefWidth="150.0" visibleRowCount="7" />
-      <ComboBox fx:id="townNameCombo" layoutX="311.0" layoutY="445.0" onAction="#townNameSelected" prefWidth="150.0" />
-      <Label layoutX="181.0" layoutY="397.0" text="Pick a family name">
+      <Label id="headerlabel" alignment="CENTER" layoutX="2.0" layoutY="1.0" prefHeight="28.0" prefWidth="635.0" text="Where did they come from? Where did they go?">
+      </Label>
+      <AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="1333.0">
+		<children>
+		    <Label alignment="CENTER" layoutX="266.0" layoutY="4.0" text="Western United States" />
+		    <ImageView id="UsImageView" fx:id="usImageView" fitHeight="529.0" fitWidth="451.0" layoutX="109.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+		         <image>
+		            <Image url="@WestUS-flat-google.jpg" />
+		         </image>
+      		</ImageView>
+
+          <Label alignment="CENTER" layoutX="907.0" layoutY="4.0" text="The Basque Country" />
+	      <ImageView id="EusImageView" fx:id="eusImageView" fitHeight="509.0" fitWidth="581.0" layoutX="666.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
+	         <image>
+	            <Image url="@euskadiOverlap3.png" />
+	         </image>
+	      </ImageView>      	   
+		</children>
+      </AnchorPane>
+      <Label text="Pick a family name">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" layoutX="184.0" layoutY="448.0" text="Pick a town name">
+
+      <ComboBox fx:id="sirNameCombo" onAction="#sirNameSelected" visibleRowCount="7" />
+      <Label alignment="CENTER" text="Pick a town name">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label id="headerlabel" alignment="CENTER" layoutX="2.0" layoutY="1.0" prefHeight="28.0" prefWidth="635.0"  text="Where did they come from? Where did they go?">
-      </Label>
-      <Label alignment="CENTER" layoutX="8.0" layoutY="28.0" prefHeight="19.0" prefWidth="311.0" text="Western United States" />
-      <Label alignment="CENTER" layoutX="317.0" layoutY="28.0" prefHeight="19.0" prefWidth="311.0" text="The Basque Country" />
+      <ComboBox fx:id="townNameCombo" onAction="#townNameSelected" />
    </children>
-</AnchorPane>
+</VBox>

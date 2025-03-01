@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -39,13 +40,15 @@ public class Controller implements Initializable {
 		System.out.println("sirNameSelected : value="+value);
 		if (value != null) {
 			Collection<OrigDestPair> odPairs = DataSourceFactory.dataSource.getOrigDestPairBySirName(value);
+			int orderIndex = 0;
 			for (OrigDestPair odPair : odPairs) {
-				drawArc(odPair);
+				drawArc(odPair, orderIndex);
+				orderIndex++;
 			}
 		}
 	}
 
-	private void drawArc(OrigDestPair odPair) {
+	private void drawArc(OrigDestPair odPair, int orderIndex) {
 		NamedPoint uSLocCoords = odPair.getDestination();
 
 			Circle circ = new Circle();
@@ -75,14 +78,26 @@ public class Controller implements Initializable {
 	      quadCurve.setStartX(circ.getCenterX()); 
 	      quadCurve.setStartY(circ.getCenterY()); 
 	      quadCurve.setEndX(circ2.getCenterX()); 
-	      quadCurve.setEndY(circ2.getCenterY()); 
-	      quadCurve.setControlX(circ.getCenterX()); 
-	      quadCurve.setControlY(circ2.getCenterY());
+	      quadCurve.setEndY(circ2.getCenterY());
+	      //calc control point based on order index
+	      double controlX = usImageView.getLayoutX()+usImageView.getFitWidth();//at seem between 2 maps
+	      double controlY = circ2.getCenterY() + orderIndex * 20;//off set subsequent control points by 10 pixels
+	      
+	      
+	      quadCurve.setControlX(controlX); 
+	      quadCurve.setControlY(controlY);
 	      quadCurve.setStroke(Color.BLACK);
-	      quadCurve.setStrokeWidth(2);
+	      quadCurve.setStrokeWidth(1);
 	      quadCurve.setFill(Color.TRANSPARENT);
 	      anchorPane.getChildren().add(quadCurve);
 	      visibleShapes.add(quadCurve);
+	      Label nameLabel = new Label();
+	      nameLabel.setText(odPair.getPairName());
+	      nameLabel.setLayoutX(circ2.getCenterX()+10);
+	      nameLabel.setLayoutY(controlY);
+	      anchorPane.getChildren().add(nameLabel);
+	      visibleShapes.add(nameLabel);
+
 	}
     
     private double translateEusY(double y) {
@@ -143,8 +158,10 @@ public class Controller implements Initializable {
 	    anchorPane.getChildren().removeAll(visibleShapes);
 		if (value != null) {
 			Collection<OrigDestPair> odPairs = DataSourceFactory.dataSource.getOrigDestPairsByTownName(value);
+			int orderIndex = 0;
 			for (OrigDestPair odPair : odPairs) {
-				drawArc(odPair);
+				drawArc(odPair,orderIndex);
+				orderIndex++ ;
 			}
 		}
 	}
