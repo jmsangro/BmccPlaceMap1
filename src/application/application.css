@@ -17,3 +17,18 @@ Label {
     -fx-font-family: Courier;
     -fx-text-alignment: CENTER;		
 }
+
+.label-location{
+    -fx-font-size: 12px;
+    -fx-font-family: Courier;
+    -fx-text-alignment: CENTER;
+    -fx-text-fill: green;
+
+}
+
+.label-sir-name{
+    -fx-font-size: 12px;
+    -fx-font-family: Courier;
+    -fx-text-alignment: CENTER;	
+    -fx-text-fill:	white;
+}

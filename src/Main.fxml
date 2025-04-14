@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -26,7 +27,8 @@
 	         <image>
 	            <Image url="@euskadiOverlap3.png" />
 	         </image>
-	      </ImageView>      	   
+	      </ImageView>
+<!--             <ListView fx:id="sirNameList" layoutX="558.0" layoutY="254.0" prefHeight="238.0" prefWidth="109.0" />      	    -->
 		</children>
       </AnchorPane>
       <Label text="Pick a family name">
@@ -35,7 +37,7 @@
          </font>
       </Label>
 
-      <ComboBox fx:id="sirNameCombo" onAction="#sirNameSelected" visibleRowCount="7" />
+       <ComboBox fx:id="sirNameCombo" onAction="#sirNameSelected" visibleRowCount="7" />
       <Label alignment="CENTER" text="Pick a town name">
          <font>
             <Font size="14.0" />

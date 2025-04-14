@@ -1,6 +1,7 @@
 package application;
 
 import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,8 +22,8 @@ public class CsvDataSource implements DataSource {
 	
 	public CsvDataSource() {
 		try {
-			String dataFile = "./familyLocationData.csv";
-	        FileReader filereader = new FileReader(dataFile); 
+			String dataFile = "./FamilyLocationData.csv";
+	        FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8);
 	        try (CSVReader csvReader = new CSVReader(filereader)) {
 				records = csvReader.readAll();
 				//remove title row.
@@ -77,8 +78,9 @@ public class CsvDataSource implements DataSource {
 	private void readUSLocations() {
 		usLocations = new HashMap<String, NamedPoint>();
 		try {
-			String dataFile = "./usLocations.csv";
-	        FileReader filereader = new FileReader(dataFile); 
+			String dataFile = "./USLocationLatLong.csv";
+	        FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8); 
+	        
 	        try (CSVReader csvReader = new CSVReader(filereader)) {
 				List<String[]> rawData = csvReader.readAll();
 				for (String[] row : rawData) {
@@ -87,6 +89,7 @@ public class CsvDataSource implements DataSource {
 					point.setX(Double.parseDouble(row[2]));
 					point.setY(Double.parseDouble(row[1]));
 					usLocations.put(point.getName(), point);
+					System.out.println(usLocations.get(point.getName()));
 				}
 				
 			}
@@ -100,8 +103,10 @@ public class CsvDataSource implements DataSource {
 	private void readEusLocations() {
 		eusLocations = new HashMap<String, NamedPoint>();
 		try {
-			String dataFile = "./eusLocations.csv";
-	        FileReader filereader = new FileReader(dataFile); 
+			String dataFile = "./EusLocationLatLongProvinceUTF8.csv";
+	        FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8); 
+	        System.out.println(filereader.getEncoding());
+
 	        try (CSVReader csvReader = new CSVReader(filereader)) {
 				List<String[]> rawData = csvReader.readAll();
 				for (String[] row : rawData) {
@@ -134,7 +139,7 @@ public class CsvDataSource implements DataSource {
 	
 	@Override
 	public Collection<OrigDestPair> getOrigDestPairBySirName(String sirName) {
-		List<OrigDestPair> odPairs = new ArrayList<OrigDestPair>();
+		SortedSet<OrigDestPair> odPairs = new TreeSet<OrigDestPair>();
 		for (String[] record : records) {
 			if (sirName.equals(record[0])) {
 				String origName = record[1];
@@ -150,7 +155,7 @@ public class CsvDataSource implements DataSource {
 
 	@Override
 	public Collection<OrigDestPair> getOrigDestPairsByTownName(String town) {
-		List<OrigDestPair> odPairs = new ArrayList<OrigDestPair>();
+		SortedSet<OrigDestPair> odPairs = new TreeSet<OrigDestPair>();
 		for (String[] record : records) {
 			if (town.equals(record[1])) {
 				String sirName = record[0];
