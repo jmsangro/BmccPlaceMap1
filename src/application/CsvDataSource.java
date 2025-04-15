@@ -13,7 +13,12 @@ import java.util.TreeSet;
 import com.opencsv.CSVReader;
 
 public class CsvDataSource implements DataSource {
-	
+	private static final int SIR_NAME_INDEX=0;
+	private static final int ORIGIN_INDEX=1;
+	private static final int DESTINATION_INDEX=2;
+	private static final int LOC_Y_INDEX = 1;
+	private static final int LOC_X_INDEX = 2;
+	private static final int LOC_NAME_INDEX = 0;
 	private List<String[]> records;
 	private SortedSet<String> sirNames;
 	private SortedSet<String> homeTownNames;
@@ -28,7 +33,9 @@ public class CsvDataSource implements DataSource {
 				records = csvReader.readAll();
 				//remove title row.
 				records.remove(records.get(0));
+				validateData();
 			}
+	        
 
 		}
 		catch (Exception e) {
@@ -36,12 +43,29 @@ public class CsvDataSource implements DataSource {
 		}
 	}
 
+	private void validateData() {
+		for (String[] row : records) {
+			String familyName = row[SIR_NAME_INDEX];
+			String usTownName = row[DESTINATION_INDEX];
+			String eusTownName = row[ORIGIN_INDEX];
+			NamedPoint point = getUSLocation(usTownName);
+			if (point == null || point.getName()==null || point.getX() == 0 || point.getY() == 0) {
+				System.err.println("Validating family:"+familyName+" US location data for town:"+usTownName+ " is bad. point info="+point);
+			}
+			point = getEusLocation(eusTownName);
+			if (point == null || point.getName()==null || point.getX() == 0 || point.getY() == 0) {
+				System.err.println("Validating family:"+familyName+" Euskadi location data for town:"+eusTownName+ " is bad. point info="+point);
+			}
+		}
+		
+	}
+
 	@Override
 	public SortedSet<String> getSirNames() {
 		if (sirNames == null) {
 			sirNames = new TreeSet<String>();
 			for(String[] record : records){
-				sirNames.add(record[0]);
+				sirNames.add(record[SIR_NAME_INDEX]);
 			}
 		}
 		return sirNames;
@@ -52,7 +76,7 @@ public class CsvDataSource implements DataSource {
 		if (homeTownNames == null) {
 			homeTownNames = new TreeSet<String>();
 			for(String[] record : records){
-				homeTownNames.add(record[1]);
+				homeTownNames.add(record[ORIGIN_INDEX]);
 			}
 		}
 		return homeTownNames;
@@ -85,11 +109,11 @@ public class CsvDataSource implements DataSource {
 				List<String[]> rawData = csvReader.readAll();
 				for (String[] row : rawData) {
 					NamedPoint point = new NamedPoint();
-					point.setName(row[0]);
-					point.setX(Double.parseDouble(row[2]));
-					point.setY(Double.parseDouble(row[1]));
+					point.setName(row[LOC_NAME_INDEX]);
+					point.setX(Double.parseDouble(row[LOC_X_INDEX]));
+					point.setY(Double.parseDouble(row[LOC_Y_INDEX]));
 					usLocations.put(point.getName(), point);
-					System.out.println(usLocations.get(point.getName()));
+					//System.out.println(usLocations.get(point.getName()));
 				}
 				
 			}
@@ -111,9 +135,9 @@ public class CsvDataSource implements DataSource {
 				List<String[]> rawData = csvReader.readAll();
 				for (String[] row : rawData) {
 					NamedPoint point = new NamedPoint();
-					point.setName(row[0]);
-					point.setX(Double.parseDouble(row[2]));
-					point.setY(Double.parseDouble(row[1]));
+					point.setName(row[LOC_NAME_INDEX]);
+					point.setX(Double.parseDouble(row[LOC_X_INDEX]));
+					point.setY(Double.parseDouble(row[LOC_Y_INDEX]));
 					eusLocations.put(point.getName(), point);
 				}
 				
@@ -141,30 +165,29 @@ public class CsvDataSource implements DataSource {
 	public Collection<OrigDestPair> getOrigDestPairBySirName(String sirName) {
 		SortedSet<OrigDestPair> odPairs = new TreeSet<OrigDestPair>();
 		for (String[] record : records) {
-			if (sirName.equals(record[0])) {
-				String origName = record[1];
-				String destName = record[2];
-				NamedPoint origPoint = getEusLocation(origName);
-				NamedPoint destPoint = getUSLocation(destName);
-				OrigDestPair odPair = new OrigDestPair(sirName, origPoint, destPoint);
-				odPairs.add(odPair);
+			if (sirName.equals(record[SIR_NAME_INDEX])) {
+				addPairFromRecord(sirName, odPairs, record);
 			}
 		}
 		return odPairs;
+	}
+
+	private void addPairFromRecord(String sirName, SortedSet<OrigDestPair> odPairs, String[] record) {
+		String origName = record[ORIGIN_INDEX];
+		String destName = record[DESTINATION_INDEX];
+		NamedPoint origPoint = getEusLocation(origName);
+		NamedPoint destPoint = getUSLocation(destName);
+		OrigDestPair odPair = new OrigDestPair(sirName, origPoint, destPoint);
+		odPairs.add(odPair);
 	}
 
 	@Override
 	public Collection<OrigDestPair> getOrigDestPairsByTownName(String town) {
 		SortedSet<OrigDestPair> odPairs = new TreeSet<OrigDestPair>();
 		for (String[] record : records) {
-			if (town.equals(record[1])) {
-				String sirName = record[0];
-				String origName = record[1];
-				String destName = record[2];
-				NamedPoint origPoint = getEusLocation(origName);
-				NamedPoint destPoint = getUSLocation(destName);
-				OrigDestPair odPair = new OrigDestPair(sirName, origPoint, destPoint);
-				odPairs.add(odPair);
+			if (town.equals(record[ORIGIN_INDEX])) {
+				String sirName = record[SIR_NAME_INDEX];
+				addPairFromRecord(sirName, odPairs, record);
 			}
 		}
 		return odPairs;
