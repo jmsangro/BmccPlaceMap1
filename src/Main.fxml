@@ -16,16 +16,16 @@
       <AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="1333.0">
 		<children>
 		    <Label alignment="CENTER" layoutX="266.0" layoutY="4.0" text="Western United States" />
-		    <ImageView id="UsImageView" fx:id="usImageView" fitHeight="529.0" fitWidth="451.0" layoutX="109.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+		    <ImageView id="UsImageView" fx:id="usImageView" fitHeight="529.0" fitWidth="520.0" layoutX="109.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
 		         <image>
-		            <Image url="@WestUS-flat-google.jpg" />
+		            <Image url="@WesternUSAmap.jpg" />
 		         </image>
       		</ImageView>
 
           <Label alignment="CENTER" layoutX="907.0" layoutY="4.0" text="The Basque Country" />
-	      <ImageView id="EusImageView" fx:id="eusImageView" fitHeight="509.0" fitWidth="581.0" layoutX="666.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
+	      <ImageView id="EusImageView" fx:id="eusImageView" fitHeight="509.0" fitWidth="559.0" layoutX="666.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
 	         <image>
-	            <Image url="@euskadiOverlap3.png" />
+	            <Image url="@EuskalHerriamap.jpg" />
 	         </image>
 	      </ImageView>
 <!--             <ListView fx:id="sirNameList" layoutX="558.0" layoutY="254.0" prefHeight="238.0" prefWidth="109.0" />      	    -->

@@ -7,19 +7,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -40,6 +35,7 @@ public class Controller implements Initializable {
 //	@FXML
 //	private ListView<String> sirNameList;
 	private HashSet<String> sirNameLabels = new HashSet<String>();
+	private HashSet<String> locNameLabels = new HashSet<String>();
 	
     @FXML
 	public void sirNameSelected(ActionEvent e) {
@@ -47,6 +43,7 @@ public class Controller implements Initializable {
 		System.out.println("sirNameSelected : value="+value);
 		if (value != null) {
 			sirNameLabels.clear();
+			locNameLabels.clear();
 		    anchorPane.getChildren().removeAll(visibleShapes);
 			Platform.runLater(() -> townNameCombo.setValue(null));
 			Collection<OrigDestPair> odPairs = DataSourceFactory.dataSource.getOrigDestPairBySirName(value);
@@ -129,14 +126,17 @@ public class Controller implements Initializable {
 	}
 	
 	private void addLocLabel (NamedPoint point, boolean usNotEus) {
+
+		String locName = point.getName();
+		if (!locNameLabels.contains(locName)) {
 	      Label nameLabel = new Label();
 	      nameLabel.setText(point.getName());
 	      double x = 0;
 	      double y = 0;
-	      double offset =  25 ;
+
 	      if (usNotEus) {
-	    	  x = translateUsX(point.getX()) - offset;
-	    	  y = translateUsY(point.getY());
+	    	  x = translateUsX(point.getX()) + baseXoffset + offsets[rotIndex][0];
+	    	  y = translateUsY(point.getY()) + offsets[rotIndex][1];
 	      }
 	      else {
 	    	  x = translateEusX(point.getX());
@@ -146,13 +146,20 @@ public class Controller implements Initializable {
 	      nameLabel.setLayoutY(y);
 	      nameLabel.getStyleClass().add("label-location");
 	      anchorPane.getChildren().add(nameLabel);
-	      visibleShapes.add(nameLabel);		
+	      visibleShapes.add(nameLabel);	
+	      rotIndex = (rotIndex+1)%offsets.length;
+	      locNameLabels.add(locName);
+		}
 	}
 	
+	private static final int[][] offsets = {{0,-14}, {0,-7}, {0, 0 }};
+	private static final double baseXoffset =  -25 ;
+	private int rotIndex = 0; 
+	
 	private double fudgeUsX = 0;
-	private double fudgeUsY = -13;
-	private double fudgeEusX = -3;
-	private double fudgeEusY = -5;
+	private double fudgeUsY = 0;
+	private double fudgeEusX = 0;
+	private double fudgeEusY = 0;
     
     private double translateEusY(double y) {
 		double originEusY = eusImageView.getLayoutY();
@@ -210,9 +217,9 @@ public class Controller implements Initializable {
 		System.out.println("townNameSelected : value="+value);
 		if (value != null) {
 			sirNameLabels.clear();
+			locNameLabels.clear();
 		    anchorPane.getChildren().removeAll(visibleShapes);	
 			Platform.runLater(() -> sirNameCombo.setValue(null));
-			SortedSet<String> sirNames = new TreeSet<String>();
 			Collection<OrigDestPair> odPairs = DataSourceFactory.dataSource.getOrigDestPairsByTownName(value);
 			int orderIndex = 0;
 			for (OrigDestPair odPair : odPairs) {
