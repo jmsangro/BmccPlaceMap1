@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -24,10 +25,17 @@ public class CsvDataSource implements DataSource {
 	private SortedSet<String> homeTownNames;
 	private Map<String, NamedPoint> usLocations;
 	private Map<String, NamedPoint> eusLocations;
+	private Properties properties;
+	private Mapper usMapper;
+	private Mapper eusMapper;
 	
-	public CsvDataSource() {
+	
+	public CsvDataSource(Properties props) {
+		properties = props;
+		
 		try {
-			String dataFile = "./FamilyLocationData.csv";
+			createMappers(props);
+			String dataFile = properties.getProperty("familyOriginDestFile"); //"./FamilyLocationData.csv";
 	        FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8);
 	        try (CSVReader csvReader = new CSVReader(filereader)) {
 				records = csvReader.readAll();
@@ -36,11 +44,34 @@ public class CsvDataSource implements DataSource {
 				validateData();
 			}
 	        
+	        
 
 		}
 		catch (Exception e) {
 			System.err.println(e);
 		}
+	}
+
+	private void createMappers(Properties props) {
+		double mapUpperLeftX = Double.parseDouble(props.getProperty("UsGPSUpperLeftX"));
+		double mapUpperLeftY = Double.parseDouble(props.getProperty("UsGPSUpperLeftY"));
+		double mapLowerRightX = Double.parseDouble(props.getProperty("UsGPSLowerRightX"));
+		double mapLowerRightY = Double.parseDouble(props.getProperty("UsGPSLowerRightY"));
+		usMapper = new Mapper(new NamedPoint("usUpperLeft", mapUpperLeftX, mapUpperLeftY),
+							new NamedPoint("usLowerRight", mapLowerRightX, mapLowerRightY), 
+							0.0,
+							0.0 );
+		mapUpperLeftX = Double.parseDouble(props.getProperty("eusGPSUpperLeftX"));
+		mapUpperLeftY = Double.parseDouble(props.getProperty("eusGPSUpperLeftY"));
+		mapLowerRightX = Double.parseDouble(props.getProperty("eusGPSLowerRightX"));
+		mapLowerRightY = Double.parseDouble(props.getProperty("eusGPSLowerRightY"));
+		eusMapper = new Mapper(new NamedPoint("eusUpperLeft", mapUpperLeftX, mapUpperLeftY),
+							new NamedPoint("eusLowerRight", mapLowerRightX, mapLowerRightY), 
+							0.0,
+							0.0 );
+		
+		
+		
 	}
 
 	private void validateData() {
@@ -102,7 +133,7 @@ public class CsvDataSource implements DataSource {
 	private void readUSLocations() {
 		usLocations = new HashMap<String, NamedPoint>();
 		try {
-			String dataFile = "./USLocationLatLong.csv";
+			String dataFile = properties.getProperty("usLocationFile");
 	        FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8); 
 	        
 	        try (CSVReader csvReader = new CSVReader(filereader)) {
@@ -127,7 +158,7 @@ public class CsvDataSource implements DataSource {
 	private void readEusLocations() {
 		eusLocations = new HashMap<String, NamedPoint>();
 		try {
-			String dataFile = "./EusLocationLatLongProvinceUTF8.csv";
+			String dataFile = properties.getProperty("eusLocationFile");;
 	        FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8); 
 	        System.out.println(filereader.getEncoding());
 
@@ -191,6 +222,16 @@ public class CsvDataSource implements DataSource {
 			}
 		}
 		return odPairs;
+	}
+
+	@Override
+	public Mapper getUSMapper() {
+		return usMapper;
+	}
+
+	@Override
+	public Mapper getEusMapper() {
+		return eusMapper;
 	}
 
 }

@@ -12,6 +12,8 @@ public interface DataSource {
 	Collection<OrigDestPair> getOrigDestPairBySirName(String sirName);
 	NamedPoint getEusLocation(String townName);
 	Collection<OrigDestPair> getOrigDestPairsByTownName(String town);
+	Mapper getUSMapper();
+	Mapper getEusMapper();
 	
 
 }

@@ -50,8 +50,8 @@ public class Controller implements Initializable {
 			int orderIndex = 0;
 			for (OrigDestPair odPair : odPairs) {
 				drawArc(odPair, orderIndex);
-				this.addLocLabel(odPair.getDestination(), true);
-				this.addLocLabel(odPair.getOrigin(), false);
+//				this.addLocLabel(odPair.getDestination(), true);
+//				this.addLocLabel(odPair.getOrigin(), false);
 				
 				orderIndex++;
 			}
@@ -64,28 +64,42 @@ public class Controller implements Initializable {
 	private void drawArc(OrigDestPair odPair, int orderIndex) {
 		NamedPoint uSLocCoords = odPair.getDestination();
 
-			Circle circ = new Circle();
-			circ.setRadius(5);
-			circ.setCenterX(translateUsX(uSLocCoords.getX()));
-			circ.setCenterY(translateUsY(uSLocCoords.getY()));
-			circ.setFill(Color.RED);
-			circ.setStroke(Color.BLACK);
-			anchorPane.getChildren().add(circ);
-			visibleShapes.add(circ);
-			
-			//addLocLabel(uSLocCoords, true);
+		Circle circ = new Circle();
+		circ.setRadius(5);
+		double originX = usImageView.getLayoutX();
+		double originY = usImageView.getLayoutY();
+		NamedPoint canvasOrigin = new NamedPoint("usCanvasOrigin", originX, originY);
+		double extentX = usImageView.getFitWidth();
+		double extentY = usImageView.getFitHeight();
+		NamedPoint canvasExtent = new NamedPoint("usCanvasExtent", extentX, extentY);
+		NamedPoint usLoc = DataSourceFactory.dataSource.getUSMapper().map(uSLocCoords, canvasOrigin, canvasExtent);
+		circ.setCenterX(usLoc.getX());
+		circ.setCenterY(usLoc.getY());
+		circ.setFill(Color.RED);
+		circ.setStroke(Color.BLACK);
+		anchorPane.getChildren().add(circ);
+		this.addLocLabel(usLoc, true);
+		visibleShapes.add(circ);
+		
+		//addLocLabel(uSLocCoords, true);
 
 		NamedPoint eusLocCoords = odPair.getOrigin();
-
-			Circle circ2 = new Circle();
-			circ2.setRadius(5);
-			circ2.setCenterX(translateEusX(eusLocCoords.getX()));
-			circ2.setCenterY(translateEusY(eusLocCoords.getY()));
-			circ2.setFill(Color.GREEN);
-			circ2.setStroke(Color.BLACK);
-			anchorPane.getChildren().add(circ2);
-			visibleShapes.add(circ2);
-
+		originX = eusImageView.getLayoutX();
+		originY = eusImageView.getLayoutY();
+		canvasOrigin = new NamedPoint("eusCanvasOrigin", originX, originY);
+		extentX = eusImageView.getFitWidth();
+		extentY = eusImageView.getFitHeight();
+		canvasExtent = new NamedPoint("eusCanvasExtent", extentX, extentY);
+		NamedPoint eusLoc = DataSourceFactory.dataSource.getEusMapper().map(eusLocCoords, canvasOrigin, canvasExtent);
+		Circle circ2 = new Circle();
+		circ2.setRadius(5);
+		circ2.setCenterX(eusLoc.getX());
+		circ2.setCenterY(eusLoc.getY());
+		circ2.setFill(Color.GREEN);
+		circ2.setStroke(Color.BLACK);
+		anchorPane.getChildren().add(circ2);
+		visibleShapes.add(circ2);
+		this.addLocLabel(eusLoc, false);
 		// draw curve between origin and destination
 	      QuadCurve quadCurve = new QuadCurve();  
 	       
@@ -135,12 +149,12 @@ public class Controller implements Initializable {
 	      double y = 0;
 
 	      if (usNotEus) {
-	    	  x = translateUsX(point.getX()) + baseXoffset + offsets[rotIndex][0];
-	    	  y = translateUsY(point.getY()) + offsets[rotIndex][1];
+	    	  x = point.getX() + baseXoffset + offsets[rotIndex][0];
+	    	  y = point.getY() + offsets[rotIndex][1];
 	      }
 	      else {
-	    	  x = translateEusX(point.getX());
-	    	  y = translateEusY(point.getY());
+	    	  x = point.getX();
+	    	  y = point.getY();
 	      }
 	      nameLabel.setLayoutX(x);
 	      nameLabel.setLayoutY(y);
@@ -156,60 +170,10 @@ public class Controller implements Initializable {
 	private static final double baseXoffset =  -25 ;
 	private int rotIndex = 0; 
 	
-	private double fudgeUsX = 0;
-	private double fudgeUsY = 0;
-	private double fudgeEusX = 0;
-	private double fudgeEusY = 0;
-    
-    private double translateEusY(double y) {
-		double originEusY = eusImageView.getLayoutY();
-		double extentEusY = eusImageView.getFitHeight();
-		double gpsOriginEusY = DataSourceFactory.dataSource.getEusLocation(euskadiUpperLeftKey).getY();
-		double gpsExtentEusY = DataSourceFactory.dataSource.getEusLocation(euskadiLowerRightKey).getY()-gpsOriginEusY;
-		double fractionOfGPSExtent = (y - gpsOriginEusY) /gpsExtentEusY;
-		return originEusY + fractionOfGPSExtent*extentEusY + fudgeEusY;	}
 
-	private double translateEusX(double x) {
-		double origin = eusImageView.getLayoutX();
-		double extent = eusImageView.getFitWidth();
-		double gpsOrigin = DataSourceFactory.dataSource.getEusLocation(euskadiUpperLeftKey).getX();
-		double gpsExtent = DataSourceFactory.dataSource.getEusLocation(euskadiLowerRightKey).getX()-gpsOrigin;
-		double fractionOfGPSExtent = (x - gpsOrigin) /gpsExtent;
-		return origin + fractionOfGPSExtent*extent + fudgeEusX;
-	}
-
-	private double translateUsY(double y) {
-		double origin = usImageView.getLayoutY();
-		double extent = usImageView.getFitHeight();
-		double gpsOrigin = DataSourceFactory.dataSource.getUSLocation(westUSUpperLeftKey).getY();
-		double gpsExtent = DataSourceFactory.dataSource.getUSLocation(westUSLowerRightKey).getY()-gpsOrigin;
-		double fractionOfGPSExtent = (y - gpsOrigin) /gpsExtent;
-		return origin + fractionOfGPSExtent*extent + fudgeUsY;
-	}
-    
-    public static String westUSUpperLeftKey = "WestUSUpperLeft";
-    public static String westUSLowerRightKey = "WestUSLowerRight";
-    public static String euskadiUpperLeftKey = "EuskadiUpperLeft";
-    public static String euskadiLowerRightKey = "EuskadiLowerRight";
-
-	private double translateUsX(double x) {
-		double origin = usImageView.getLayoutX();
-		double extent = usImageView.getFitWidth();
-		double gpsOrigin = DataSourceFactory.dataSource.getUSLocation(westUSUpperLeftKey).getX();
-		double gpsExtent = DataSourceFactory.dataSource.getUSLocation(westUSLowerRightKey).getX()-gpsOrigin;
-		double fractionOfGPSExtent = (x - gpsOrigin) /gpsExtent;
-		return origin + fractionOfGPSExtent*extent +fudgeUsX;
-	}
 
 	private static List<Node> visibleShapes = new ArrayList<Node>();
     
-    private static HashMap<String, int[][]> usLocHash;
-    static {
-    	usLocHash = new HashMap<String, int[][]>();
-    	usLocHash.put("Sangroniz", new int[][] {{50,70},{60,80}});
-    	usLocHash.put("Zatica", new int[][] {{150,80},{170,100}});
-    	
-    }
 	
 	@FXML
 	public void townNameSelected(ActionEvent e) {
