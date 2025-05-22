@@ -7,30 +7,35 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="971.0" prefWidth="1309.0" stylesheets="@application/application.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<VBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="971.0" prefWidth="1309.0" stylesheets="@application/application.css" xmlns="http://javafx.com/javafx/21.0.7" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <children>
       <Label id="headerlabel" alignment="CENTER" layoutX="2.0" layoutY="1.0" prefHeight="28.0" prefWidth="635.0" text="Where did they come from? Where did they go?">
       </Label>
-      <AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="1333.0">
-		<children>
-		    <Label alignment="CENTER" layoutX="266.0" layoutY="4.0" text="Western United States" />
-		    <ImageView id="UsImageView" fx:id="usImageView" fitHeight="529.0" fitWidth="520.0" layoutX="109.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
-		         <image>
-		            <Image url="@WesternUSAmap.jpg" />
-		         </image>
-      		</ImageView>
-
-          <Label alignment="CENTER" layoutX="907.0" layoutY="4.0" text="The Basque Country" />
-	      <ImageView id="EusImageView" fx:id="eusImageView" fitHeight="509.0" fitWidth="559.0" layoutX="666.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
-	         <image>
-	            <Image url="@EuskalHerriamap.jpg" />
-	         </image>
-	      </ImageView>
-<!--             <ListView fx:id="sirNameList" layoutX="558.0" layoutY="254.0" prefHeight="238.0" prefWidth="109.0" />      	    -->
-		</children>
-      </AnchorPane>
+      <HBox alignment="CENTER">
+      	<children>
+      		<AnchorPane fx:id="anchorPane" prefHeight="600.0" prefWidth="1333.0">
+				<children>
+				    <Label alignment="CENTER" layoutX="266.0" layoutY="4.0" text="Western United States" />
+				    <ImageView id="UsImageView" fx:id="usImageView" fitHeight="529.0" fitWidth="520.0" layoutX="109.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+				         <image>
+				            <Image url="@WesternUSAmap.jpg" />
+				         </image>
+		      		</ImageView>
+		
+		          <Label alignment="CENTER" layoutX="907.0" layoutY="4.0" text="The Basque Country" />
+			      <ImageView id="EusImageView" fx:id="eusImageView" fitHeight="509.0" fitWidth="559.0" layoutX="666.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
+			         <image>
+			            <Image url="@EuskalHerriamap.jpg" />
+			         </image>
+			      </ImageView>
+		<!--             <ListView fx:id="sirNameList" layoutX="558.0" layoutY="254.0" prefHeight="238.0" prefWidth="109.0" />      	    -->
+				</children>
+		    </AnchorPane>
+      	</children>
+      </HBox>
       <Label text="Pick a family name">
          <font>
             <Font size="14.0" />

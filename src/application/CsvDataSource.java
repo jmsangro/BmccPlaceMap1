@@ -1,6 +1,7 @@
 package application;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,8 +11,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 
 public class CsvDataSource implements DataSource {
 	private static final int SIR_NAME_INDEX=0;
@@ -131,48 +132,51 @@ public class CsvDataSource implements DataSource {
 	}
 
 	private void readUSLocations() {
-		usLocations = new HashMap<String, NamedPoint>();
+		HashMap<String, NamedPoint> locations = new HashMap<String, NamedPoint>();
 		try {
 			String dataFile = properties.getProperty("usLocationFile");
-	        FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8); 
-	        
-	        try (CSVReader csvReader = new CSVReader(filereader)) {
-				List<String[]> rawData = csvReader.readAll();
-				for (String[] row : rawData) {
-					NamedPoint point = new NamedPoint();
-					point.setName(row[LOC_NAME_INDEX]);
-					point.setX(Double.parseDouble(row[LOC_X_INDEX]));
-					point.setY(Double.parseDouble(row[LOC_Y_INDEX]));
-					usLocations.put(point.getName(), point);
-					//System.out.println(usLocations.get(point.getName()));
-				}
-				
-			}
+	        readFileIntoHashMap(locations, dataFile);
+	        usLocations = locations;
 
 		}
 		catch (Exception e) {
 			System.err.println(e);
 		}		
 	}
+
+	private void readFileIntoHashMap(HashMap<String, NamedPoint> locations, String dataFile)
+			throws IOException, CsvException {
+		FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8); 
+		
+		try (CSVReader csvReader = new CSVReader(filereader)) {
+			List<String[]> rawData = csvReader.readAll();
+			//check 1st row for header
+			String[] firstRow = rawData.get(0);
+			try {
+				Double.parseDouble(firstRow[LOC_X_INDEX]);
+			}
+			catch (NumberFormatException e) {
+				System.out.println("Detected non-number in 1st row");
+				rawData.remove(0);
+			}
+			for (String[] row : rawData) {
+				NamedPoint point = new NamedPoint();
+				point.setName(row[LOC_NAME_INDEX]);
+				point.setX(Double.parseDouble(row[LOC_X_INDEX]));
+				point.setY(Double.parseDouble(row[LOC_Y_INDEX]));
+				locations.put(point.getName(), point);
+				//System.out.println(usLocations.get(point.getName()));
+			}
+			
+		}
+	}
 	
 	private void readEusLocations() {
-		eusLocations = new HashMap<String, NamedPoint>();
+		HashMap<String, NamedPoint> locations = new HashMap<String, NamedPoint>();
 		try {
-			String dataFile = properties.getProperty("eusLocationFile");;
-	        FileReader filereader = new FileReader(dataFile, StandardCharsets.UTF_8); 
-	        System.out.println(filereader.getEncoding());
-
-	        try (CSVReader csvReader = new CSVReader(filereader)) {
-				List<String[]> rawData = csvReader.readAll();
-				for (String[] row : rawData) {
-					NamedPoint point = new NamedPoint();
-					point.setName(row[LOC_NAME_INDEX]);
-					point.setX(Double.parseDouble(row[LOC_X_INDEX]));
-					point.setY(Double.parseDouble(row[LOC_Y_INDEX]));
-					eusLocations.put(point.getName(), point);
-				}
-				
-			}
+			String dataFile = properties.getProperty("eusLocationFile");
+			readFileIntoHashMap(locations, dataFile);
+	        eusLocations = locations;
 
 		}
 		catch (Exception e) {

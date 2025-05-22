@@ -1,34 +1,35 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 .root {
     -fx-font-size: 14px;
-   /*  -fx-font-family: sans-serif; */
-    -fx-background-color: #71D4E9;
+    -fx-font-family: EHUSans;
+    -fx-background-color: white;
+    /* -fx-background-color: #71D4E9; */
 }
 
 #headerlabel{
     -fx-font-size: 24px;
-    -fx-font-family: Corbel;
+    -fx-font-family: EHUSans;
     -fx-text-alignment: CENTER;
     -fx-text-fill: #000000;	
 }
 
 Label {
     -fx-font-size: 14px;
-    -fx-font-family: Courier;
+    -fx-font-family: EHUSans;
     -fx-text-alignment: CENTER;		
 }
 
 .label-location{
     -fx-font-size: 12px;
-    -fx-font-family: Courier;
+    -fx-font-family: EHUSans;
     -fx-text-alignment: CENTER;
-    -fx-text-fill: green;
+    -fx-text-fill: black;
 
 }
 
 .label-sir-name{
     -fx-font-size: 12px;
-    -fx-font-family: Courier;
+    -fx-font-family: EHUSans;
     -fx-text-alignment: CENTER;	
-    -fx-text-fill:	white;
+    -fx-text-fill:	black;
 }
