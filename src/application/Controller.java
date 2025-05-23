@@ -21,6 +21,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.QuadCurve;
 
 public class Controller implements Initializable {
+	private static final int COL2_Y_OFFSET = 8;
+	private static final int NAME_LABEL_TEXT_HEIGHT = 16;
+	private static final int MAX_NUM_NAMES = 30;
+	private static final double COLUMN_OFFSET = 70;
 	@FXML
 	private ComboBox<String> sirNameCombo;
 	@FXML
@@ -100,42 +104,45 @@ public class Controller implements Initializable {
 		visibleShapes.add(circ2);
 		this.addLocLabel(eusLoc, false);
 		// draw curve between origin and destination
-	      QuadCurve quadCurve = new QuadCurve();  
-	       
-	      //Adding properties to the Quad Curve 
-	      quadCurve.setStartX(circ.getCenterX()); 
-	      quadCurve.setStartY(circ.getCenterY()); 
-	      quadCurve.setEndX(circ2.getCenterX()); 
-	      quadCurve.setEndY(circ2.getCenterY());
-	      //calc control point based on order index
-	      double controlX = usImageView.getLayoutX()+usImageView.getFitWidth();//at seem between 2 maps
-	      double controlY = 26 + orderIndex * 20;//off set subsequent control points by 10 pixels
-	      if (! sirNameLabels.contains(odPair.getPairName())) {
-			//double controlY = circ2.getCenterY() + orderIndex * 20;//off set subsequent control points by 10 pixels
-			//put label with sir name at control point
+
+	      //determine label location based on order index
+	      double labelLocX = usImageView.getLayoutX()+usImageView.getFitWidth();//at seem between 2 maps
+	      double labelLocY = usImageView.getLayoutY() + orderIndex * NAME_LABEL_TEXT_HEIGHT;//off set subsequent control points by 10 pixels
+	      //handle overflow case -> start a 2nd column
+	      if (orderIndex > MAX_NUM_NAMES) {
+	    	  labelLocX = labelLocX + COLUMN_OFFSET;
+	    	  labelLocY = usImageView.getLayoutY()+COL2_Y_OFFSET + (orderIndex-MAX_NUM_NAMES)*NAME_LABEL_TEXT_HEIGHT;
+	      }
+	      //put label with sir name at label loc point
 			Label nameLabel = new Label();
 			nameLabel.setText(odPair.getPairName());
-			nameLabel.setLayoutX(controlX);
-			nameLabel.setLayoutY(26 + sirNameLabels.size()*16);
+			nameLabel.setLayoutX(labelLocX);
+			nameLabel.setLayoutY(labelLocY);
 			nameLabel.getStyleClass().add("label-sir-name");
 			anchorPane.getChildren().add(nameLabel);
 			visibleShapes.add(nameLabel);
 			sirNameLabels.add(odPair.getPairName());
-		  }
-		  quadCurve.setControlX(controlX); 
-	      quadCurve.setControlY(controlY);
+		  labelLocY = labelLocY+NAME_LABEL_TEXT_HEIGHT;
+	      addArc(usLoc.getX(),usLoc.getY(), labelLocX, labelLocY);
+	      addArc(eusLoc.getX(), eusLoc.getY(), labelLocX, labelLocY);
+
+	}
+
+	private void addArc(double startX, double startY, double endX, double endY) {
+		QuadCurve quadCurve = new QuadCurve();        
+	      //Adding properties to the Quad Curve 
+	      quadCurve.setStartX(startX); 
+	      quadCurve.setStartY(startY); 
+	      quadCurve.setEndX(endX); 
+	      quadCurve.setEndY(endY);
+	      //set control point x half way between start and end.
+		  quadCurve.setControlX(startX +(endX-startX)/2); 
+	      quadCurve.setControlY(endY);
 	      quadCurve.setStroke(Color.BLACK);
 	      quadCurve.setStrokeWidth(1);
 	      quadCurve.setFill(Color.TRANSPARENT);
 	      anchorPane.getChildren().add(quadCurve);
 	      visibleShapes.add(quadCurve);
-//	      Label nameLabel = new Label();
-//	      nameLabel.setText(odPair.getPairName());
-//	      nameLabel.setLayoutX(circ2.getCenterX()+10);
-//	      nameLabel.setLayoutY(controlY);
-//	      anchorPane.getChildren().add(nameLabel);
-//	      visibleShapes.add(nameLabel);
-
 	}
 	
 	private void addLocLabel (NamedPoint point, boolean usNotEus) {
