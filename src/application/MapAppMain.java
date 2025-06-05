@@ -25,7 +25,7 @@ public class MapAppMain extends Application {
 			Scene scene = new Scene(root,screenBounds.getWidth(),screenBounds.getHeight());			
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			stage.setScene(scene);
-
+			stage.setFullScreen(true);			
 			stage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

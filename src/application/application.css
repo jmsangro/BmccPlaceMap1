@@ -2,8 +2,8 @@
 .root {
     -fx-font-size: 14px;
     -fx-font-family: EHUSans;
-    -fx-background-color: white;
-    /* -fx-background-color: #71D4E9; */
+    /*-fx-background-color: white;*/
+     -fx-background-color: #71D4E9;
 }
 
 #headerlabel{
@@ -32,4 +32,14 @@ Label {
     -fx-font-family: EHUSans;
     -fx-text-alignment: CENTER;	
     -fx-text-fill:	black;
+}
+
+.combo-box{
+    -fx-font-size: 20px;
+    -fx-font-family: EHUSans;
+    -fx-text-fill:	#71D4E9;
+}
+
+.scroll-bar{
+	 -fx-pref-width: 40
 }

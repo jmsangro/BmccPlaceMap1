@@ -148,6 +148,7 @@ public class Controller implements Initializable {
 	private void addLocLabel (NamedPoint point, boolean usNotEus) {
 
 		String locName = point.getName();
+		int numChars = locName.length();
 		if (!locNameLabels.contains(locName)) {
 	      Label nameLabel = new Label();
 	      nameLabel.setText(point.getName());
@@ -155,7 +156,7 @@ public class Controller implements Initializable {
 	      double y = 0;
 
 	      if (usNotEus) {
-	    	  x = point.getX() + baseXoffset + offsets[rotIndex][0];
+	    	  x = point.getX() - (numChars*6.5) + offsets[rotIndex][0];
 	    	  y = point.getY() + offsets[rotIndex][1];
 	      }
 	      else {
@@ -172,8 +173,8 @@ public class Controller implements Initializable {
 		}
 	}
 	
-	private static final int[][] offsets = {{0,-14}, {0,-7}, {0, 0 }};
-	private static final double baseXoffset =  -25 ;
+	private static final int[][] offsets = {{0,0}, {0,0}, {0, 0 }};
+	//private static final double baseXoffset =  -25 ;
 	private int rotIndex = 0; 
 	
 
@@ -215,6 +216,7 @@ public class Controller implements Initializable {
         sirNameCombo.setItems(FXCollections.observableArrayList(sirNames));
         Collection<String> townNames =DataSourceFactory.dataSource.getTownNames();
         townNameCombo.setItems(FXCollections.observableArrayList(townNames));
+
 		
 	};
 
