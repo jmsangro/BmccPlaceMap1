@@ -3,7 +3,7 @@
     -fx-font-size: 14px;
     -fx-font-family: EHUSans;
     /*-fx-background-color: white;*/
-     -fx-background-color: #71D4E9;
+    -fx-background-color: #71D4E9;
 }
 
 #headerlabel{
@@ -41,5 +41,19 @@ Label {
 }
 
 .scroll-bar{
-	 -fx-pref-width: 40
+	 -fx-pref-width: 50;
+}
+
+.scroll-bar:vertical > .decrement-button {
+    -fx-pref-width: 50;
+    -fx-pref-height: 50;
+    -fx-position-shape: true;
+    -fx-scale-shape: true;
+}
+
+.scroll-bar:vertical > .increment-button {
+    -fx-pref-width: 50;
+    -fx-pref-height: 50;
+    -fx-position-shape: true;
+    -fx-scale-shape: true;
 }

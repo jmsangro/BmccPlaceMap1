@@ -22,7 +22,7 @@
  Download jar files of libraries in the dependencies list.
   https://mvnrepository.com/artifact/com.opencsv/opencsv/5.8
   https://commons.apache.org/proper/commons-lang/download_lang.cgi
- Compile source .java files in .class files
+ Compile source .java files into .class files
  Edit example command line script file (.bat or .sh) to correct locations for the dependencies.
  Run the script file.
  

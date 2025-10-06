@@ -3,9 +3,13 @@ package application;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -25,6 +29,8 @@ public class Controller implements Initializable {
 	private static final int NAME_LABEL_TEXT_HEIGHT = 16;
 	private static final int MAX_NUM_NAMES = 30;
 	private static final double COLUMN_OFFSET = 70;
+	private long lastActionTime;
+	private static final long ACTION_TIMEOUT = 2*60*1000;//minutes*second/minute*ms/sec (1minute)
 	@FXML
 	private ComboBox<String> sirNameCombo;
 	@FXML
@@ -42,6 +48,7 @@ public class Controller implements Initializable {
 	
     @FXML
 	public void sirNameSelected(ActionEvent e) {
+    	lastActionTime = new Date().getTime();
 		String value = sirNameCombo.getValue();
 		System.out.println("sirNameSelected : value="+value);
 		if (value != null) {
@@ -184,6 +191,7 @@ public class Controller implements Initializable {
 	
 	@FXML
 	public void townNameSelected(ActionEvent e) {
+    	lastActionTime = new Date().getTime();
 		String value = townNameCombo.getValue();
 		System.out.println("townNameSelected : value="+value);
 		if (value != null) {
@@ -217,7 +225,31 @@ public class Controller implements Initializable {
         Collection<String> townNames =DataSourceFactory.dataSource.getTownNames();
         townNameCombo.setItems(FXCollections.observableArrayList(townNames));
 
-		
+		Timer timer = new Timer();
+		timer.schedule(new IdleTimerTask(), 120000, 60000);		
 	};
+	
+	private int idlePickIndex = 0;
+	
+	private class IdleTimerTask extends TimerTask{
+		@Override
+		public void run() {
+			System.out.println("Idle Timer Task Run");
+			long now = new Date().getTime();
+			if ( now > lastActionTime + ACTION_TIMEOUT) {
+				Platform.runLater( () -> {
+					//move through sir names in reverse alphabetical order. 
+					idlePickIndex = (idlePickIndex-1);
+					if (idlePickIndex < 0) idlePickIndex = sirNameCombo.getItems().size()-1;
+					System.out.println("Timeout occurred. new index is:"+idlePickIndex);
+					sirNameCombo.setValue(sirNameCombo.getItems().get(idlePickIndex));
+				} );
+			}
+			
+		}
+
+
+		
+	}
 
 }

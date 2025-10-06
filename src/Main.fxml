@@ -2,12 +2,11 @@
 
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <VBox fx:id="root" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="971.0" prefWidth="1309.0" stylesheets="@application/application.css" xmlns="http://javafx.com/javafx/21.0.7" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
@@ -36,18 +35,42 @@
 		    </AnchorPane>
       	</children>
       </HBox>
-      <Label text="Pick a family name">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-
-       <ComboBox fx:id="sirNameCombo" onAction="#sirNameSelected" visibleRowCount="7" />
-      <Label alignment="CENTER" text="Pick a town name">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="townNameCombo" onAction="#townNameSelected" />
+      <HBox alignment="CENTER" spacing="10">
+      	<children>
+      		<VBox alignment="CENTER" prefWidth="500.0">
+				<ImageView>
+			         <image>
+			            <Image url="@bmcc-logo.png" />
+			         </image>
+				</ImageView>
+			</VBox>
+		      <VBox alignment="TOP_LEFT">
+		      	<children>
+				      <Label text="Pick a family name">
+				         <font>
+				            <Font size="14.0" />
+				         </font>
+				      </Label>
+				      <ComboBox fx:id="sirNameCombo" onAction="#sirNameSelected" visibleRowCount="7" />
+				      <Label alignment="CENTER" text="Pick a town name">
+				         <font>
+				            <Font size="14.0" />
+				         </font>
+				      </Label>
+				      <ComboBox fx:id="townNameCombo" onAction="#townNameSelected" />
+			      </children>     
+			  </VBox>
+		  </children>
+	  </HBox>
+	  <HBox alignment="BOTTOM_RIGHT" >
+	  	<children>
+		  	<Label  text="Use this pen to begin your search." />
+	 		<ImageView fitHeight="20.0" fitWidth="20.0">
+		         <image>
+		            <Image url="@arrow.png" />
+		         </image>
+			</ImageView>
+		</children>		
+	  </HBox> 			  
    </children>
 </VBox>
